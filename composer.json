@@ -1,0 +1,44 @@
+{
+  "name": "guysolamour/laravel-dkim",
+  "description": "Laravel package for signing outgoing messages with DKIM.",
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "dkim"
+  ],
+  "type": "library",
+  "authors": [
+    {
+      "name": "Guy-roland ASSALE",
+      "email": "rolandassale@gmail.com"
+    }
+  ],
+  "require": {
+    "illuminate/support": "^9.0|^10.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Guysolamour\\Dkim\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Guysolamour\\Dkim\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "phpunit": "phpunit"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Guysolamour\\Dkim\\ServiceProvider"
+      ]
+    }
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
+  }
+}
