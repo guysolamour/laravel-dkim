@@ -1,101 +1,47 @@
 # Laravel Callmebot
 
-[![Packagist](https://img.shields.io/packagist/v/guysolamour/laravel-callmebot.svg)](https://packagist.org/packages/guysolamour/laravel-callmebot)
-[![Packagist](https://poser.pugx.org/guysolamour/laravel-callmebot/d/total.svg)](https://packagist.org/packages/guysolamour/laravel-callmebot)
-[![Packagist](https://img.shields.io/packagist/l/guysolamour/laravel-callmebot.svg)](https://packagist.org/packages/guysolamour/laravel-callmebot)
+[![Packagist](https://img.shields.io/packagist/v/guysolamour/laravel-dkim.svg)](https://packagist.org/packages/guysolamour/laravel-dkim)
+[![Packagist](https://poser.pugx.org/guysolamour/laravel-dkim/d/total.svg)](https://packagist.org/packages/guysolamour/laravel-dkim)
+[![Packagist](https://img.shields.io/packagist/l/guysolamour/laravel-dkim.svg)](https://packagist.org/packages/guysolamour/laravel-dkim)
 
 
 ## Installation
 
 Install via composer
 ```bash
-composer require guysolamour/laravel-callmebot
+composer require guysolamour/laravel-dkim
 ```
 
-## Usage
 
-### Whatsapp
+After that, you should publish the config file with:
 
-#### Send message
-```php
-Guysolamour\Callmebot\Facades\Whatsapp::apikey($apikey)->phone($phone)->message($message)->send();
-
-// or
-
-Guysolamour\Callmebot\Facades\Whatsapp::send([
-  'apikey'   => $apikey,
-  'phone'    => $phone,
-  'text'     => $message,
-]);
-
+```bash
+php artisan vendor:publish --provider="Guysolamour\Dkim\ServiceProvider"
 ```
 
-#### Send notification
+The ServiceProvider extends the MailServiceProvider and overwrites a method that we need for our own behavior.
 
-```php
-// in Notification file
+Next we need to create a private and public key pair for signing and verifying the email.
 
-/**
- * Get the notification's delivery channels.
- *
- * @param  mixed  $notifiable
- * @return array
- */
-public function via($notifiable)
-{
-    return ['cbwhatsapp']; // or ['Guysolamour\Callmebot\Channels\WhatsappChannel::class']
-}
+There are many tools available to generate the necessary keys but here is one which is easy to use:
 
-/**
- * Get the array representation of the notification.
- *
- * @param  mixed  $notifiable
- * @return array
- */
-public function toCbWhatsapp($notifiable)
-{
-    return "Message ...";
-}
+https://tools.socketlabs.com/dkim/generator
 
-// in Notifiable model
-public function enableCallmebotNotification() :bool
-{
-    return true;
-}
+Enter your domain and in the "selector" field enter `default`, or adjust the "selector" in the laravel config file accordingly. Leave the remaining fields as they are.
 
-public function routeNotificationForCbWHatsapp()
-{
-    return 0102030405;
-}
+After you have generated the keys and added the public key to your dns record, here is a tool to validate it:
 
-/**
- * Get callmebot api keys
- *
- * @param string|null $client
- * @return string|array
- */
-public function callmebotApiKeys(?string $client = null)
-{
-    $client_keys =  [
-        'whatsapp' => 012345,
-    ];
+https://www.mail-tester.com/spf-dkim-check
 
-    if (is_null($client)){
-        return $client_keys;
-    }
+Finally, store the private key for example in `storage/app/dkim/dkim.private.key` and configure your settings in `.env`:
 
-    return Arr::get($client_keys, $client);
-}
+You need to set the **full absolute path** in the environment variable.
+
+```ini
+DKIM_DOMAIN=example.com
 ```
-## Security
-
-If you discover any security related issues, please email rolandassale@gmail.com
-instead of using the issue tracker.
 
 ## Credits
 
-- [Guy-roland ASSALE](https://github.com/guysolamour/laravel-callmebot)
-- [All contributors](https://github.com/guysolamour/laravel-callmebot/graphs/contributors)
-
-This package is bootstrapped with the help of
-[melihovv/laravel-package-generator](https://github.com/melihovv/laravel-package-generator).
+- [Guy-roland ASSALE](https://github.com/guysolamour/laravel-dkim)
+- [All contributors](https://github.com/guysolamour/laravel-dkim/graphs/contributors)

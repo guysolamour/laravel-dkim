@@ -2,8 +2,10 @@
 
 namespace Guysolamour\Dkim;
 
+use Illuminate\Mail\MailServiceProvider;
 
-class ServiceProvider extends \Illuminate\Support\ServiceProvider
+
+class ServiceProvider extends MailServiceProvider
 {
     const CONFIG_PATH     = __DIR__ . '/../config/dkim.php';
 
@@ -18,10 +20,23 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     public function register()
     {
+        parent::register();
+
         $this->mergeConfigFrom(
             self::CONFIG_PATH,
             'dkim'
         );
+    }
+
+     /**
+     * Register the Illuminate mailer instance.
+     *
+     * @return void
+     */
+    protected function registerIlluminateMailer()
+    {
+        $this->app->singleton('mail.manager', fn($app) => new MailManager($app));
+        $this->app->bind('mailer', fn($app) => $app->make('mail.manager')->mailer());
     }
 }
 
