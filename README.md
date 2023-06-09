@@ -1,4 +1,4 @@
-# Laravel Callmebot
+# Laravel DKIM
 
 [![Packagist](https://img.shields.io/packagist/v/guysolamour/laravel-dkim.svg)](https://packagist.org/packages/guysolamour/laravel-dkim)
 [![Packagist](https://poser.pugx.org/guysolamour/laravel-dkim/d/total.svg)](https://packagist.org/packages/guysolamour/laravel-dkim)
